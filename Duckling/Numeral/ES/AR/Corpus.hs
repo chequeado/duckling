@@ -24,7 +24,7 @@ allExamples =
     , examples (NumeralValue 100000) ["100.000", "100000"]
     , examples (NumeralValue 243) ["243"]
     , examples (NumeralValue 3000000) ["3000000", "3.000.000"]
-    , examples (NumeralValue 1200000) ["1.200.000", "1200000"]
+    , examples (NumeralValue 1200000) ["1.200.000", "1200000", "1,2 millones"]
     , examples
         (NumeralValue (-1200000))
         ["- 1.200.000", "menos 1.200.000", "-1,2M", "-,0012G"]

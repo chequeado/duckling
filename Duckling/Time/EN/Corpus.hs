@@ -279,7 +279,6 @@ allExamples = concat
              ]
   , examples (datetime (2014, 3, 1, 0, 0, 0) Month)
              [ "March in 1 year"
-             , "March in a year"
              ]
   , examples (datetime (2014, 7, 18, 0, 0, 0) Day)
              [ "Fri, Jul 18"

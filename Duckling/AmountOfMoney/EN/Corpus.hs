@@ -75,7 +75,6 @@ allExamples = concat
              [ "USD3.14"
              , "3.14US$"
              , "US$ 3.14"
-             , "US$3 and fourteen"
              ]
   , examples (simple EUR 20)
              [ "20\x20ac"
@@ -98,110 +97,10 @@ allExamples = concat
              , "20Rs"
              , "Rs20"
              ]
-  , examples (simple INR 20.43)
-             [ "20 Rupees 43"
-             , "twenty rupees 43"
-             ]
   , examples (simple Dollar 20.43)
              [ "$20 and 43c"
-             , "$20 43"
              , "20 dollar 43c"
              , "20 dollars 43 cents"
-             , "twenty dollar 43 cents"
-             , "20 dollar 43"
-             , "twenty dollar and 43"
-             ]
-  , examples (simple GBP 3.01)
-             [ "GBP3.01"
-             , "GBP 3.01"
-             , "3 GBP 1 pence"
-             , "3 GBP and one"
-             ]
-  , examples (simple CAD 3.03)
-             [ "CAD3.03"
-             , "CAD 3.03"
-             , "3 CAD 3 cents"
-             ]
-  , examples (simple CHF 3.04)
-             [ "CHF3.04"
-             , "CHF 3.04"
-             , "3 CHF 4 cents"
-             ]
-  , examples (simple CNY 3)
-             [ "CNY3"
-             , "CNY 3"
-             , "3 CNY"
-             , "3 yuan"
-             ]
-  , examples (simple Unnamed 42)
-             [ "42 bucks"
-             , "around 42 bucks"
-             , "exactly 42 bucks"
-             ]
-  , examples (simple KWD 42)
-             [ "42 KWD"
-             , "42 kuwaiti Dinar"
-             ]
-  , examples (simple LBP 42)
-             [ "42 LBP"
-             , "42 Lebanese Pounds"
-             ]
-  , examples (simple EGP 42)
-             [ "42 EGP"
-             , "42 egyptianpound"
-             ]
-  , examples (simple QAR 42)
-             [ "42 QAR"
-             , "42 qatari riyals"
-             ]
-  , examples (simple SAR 42)
-             [ "42 SAR"
-             , "42 Saudiriyal"
-             ]
-  , examples (simple BGN 42)
-             [ "42 BGN"
-             ]
-  , examples (simple MYR 42)
-             [ "42 MYR"
-             , "42 RM"
-             , "RM 42"
-             , "MYR 42"
-             , "42MYR"
-             , "42RM"
-             , "RM42"
-             , "MYR42"
-             , "ringgit 42"
-             , "42 ringgit"
-             , "42 malaysia ringgit"
-             , "malaysia ringgit 42"
-             , "42 malaysian ringgit"
-             , "malaysian ringgit 42"
-             , "42 malaysia ringgits"
-             , "malaysia ringgits 42"
-             , "42 malaysian ringgits"
-             , "malaysian ringgits 42"
-             ]
-  , examples (simple MYR 20.43)
-             [ "20 ringgit and 43c"
-             , "20 ringgit and 43 sen"
-             , "twenty ringgit 43 sens"
-             , "20 ringgit 43"
-             , "twenty ringgit and 43"
-             ]
-  , examples (simple Dinar 10)
-             [ "10 dinars"
-             ]
-  , examples (simple ILS 10)
-             [ "ten shekels"
-             , "10 ILS"
-             ]
-  , examples (simple Riyal 10)
-             [ "ten riyals"
-             , "10 riyals"
-             ]
-  , examples (simple Rial 10)
-             [ "ten rials"
-             , "10 rials"
              ]
   , examples (between Dollar (10, 20))
              [ "between 10 and 20 dollars"
@@ -230,17 +129,6 @@ allExamples = concat
              , "above a dollar and 42 cents"
              , "no less than $1.42"
              ]
-   , examples (simple INR 5e5)
-              [ "5 lakh rupees"
-              , "five lakhs rupees"
-              ]
-   , examples (between INR (7, 9e5))
-              [ "7-9 lakh rupees"
-              ]
-   , examples (simple INR 4e7)
-              [ "four crore rupees"
-              , "4 crores rupees"
-              ]
    , examples (simple MNT 10)
               [ "ten tugriks"
               , "10 Tugrik"

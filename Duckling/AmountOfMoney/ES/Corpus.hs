@@ -24,13 +24,11 @@ corpus = (testContext {locale = makeLocale ES Nothing}, testOptions, allExamples
 
 allExamples :: [Example]
 allExamples = concat
-  [ examples (simple Dollar 10)
-             [ "$10"
-             , "10$"
-             , "diez dollars"
+  [ examples (simple USD 10)
+             [ "10 dolares"
              , "diez dólares"
              ]
-  , examples (simple Dollar 10000)
+  , examples (simple ARS 10000)
              [ "$10.000"
              , "10K$"
              , "$10k"
@@ -64,18 +62,25 @@ allExamples = concat
              , "15pta"
              , "15Ptas"
              ]
-  , examples (between Dollar (10, 20))
-             [ "entre 10 y 20 dólares"
+  , examples (between ARS (10, 20))
+             [ "entre 10 y 20 pesos"
              , "de $10 y $20"
-             , "$10 - 20 dólares"
              , "10 - 20 $"
              ]
-  , examples (under Dollar 10)
-             [ "menos de 10 dólares"
-             , "no más de $10"
+  , examples (under USD 10)
+             [ 
+               "menos de 10 dólares"
              ]
-  , examples (above Dollar 10)
-             [ "no menos de 10 dólares"
-             , "más de $10"
+  , examples (under ARS 10)
+             [
+               "no más de $10"
+             ]
+  , examples (above USD 10)
+             [ 
+               "no menos de 10 dólares"
+             ]
+  , examples (above ARS 10)
+             [
+                "más de $10"
              ]
   ]

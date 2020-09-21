@@ -35,6 +35,7 @@ data Currency
   | Riyal
   | Unnamed -- e.g. bucks
   -- unambiguous
+  | ARS
   | AED
   | AUD
   | BGN
@@ -91,6 +92,7 @@ instance ToJSON Currency where
   toJSON Rial    = "rial"
   toJSON Riyal   = "riyal"
   toJSON Unnamed = "unknown"
+  toJSON ARS     = "ARS"
   toJSON AED     = "AED"
   toJSON AUD     = "AUD"
   toJSON BGN     = "BGN"

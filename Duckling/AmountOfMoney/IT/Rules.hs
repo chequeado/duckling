@@ -13,9 +13,12 @@ module Duckling.AmountOfMoney.IT.Rules
   ( rules
   ) where
 
+import Data.HashMap.Strict (HashMap)
 import Data.Maybe
 import Data.String
+import Data.Text (Text)
 import Prelude
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Text as Text
 
 import Duckling.AmountOfMoney.Helpers
@@ -27,6 +30,112 @@ import Duckling.Regex.Types (GroupMatch (..))
 import Duckling.Types
 import qualified Duckling.AmountOfMoney.Types as TAmountOfMoney
 import qualified Duckling.Numeral.Types as TNumeral
+
+currencies :: HashMap Text Currency
+currencies = HashMap.fromList
+  [ ("aed", AED)
+  , ("aud", AUD)
+  , ("bgn", BGN)
+  , ("brl", BRL)
+  , ("byn", BYN)
+  , ("cad", CAD)
+  , ("¢", Cent)
+  , ("c", Cent)
+  , ("chf", CHF)
+  , ("cny", CNY)
+  , ("czk", CZK)
+  , ("rmb", CNY)
+  , ("yuan", CNY)
+  , ("$", Dollar)
+  , ("dinar", Dinar)
+  , ("dinars", Dinar)
+  , ("dkk", DKK)
+  , ("dollar", Dollar)
+  , ("dollars", Dollar)
+  , ("egp", EGP)
+  , ("€", EUR)
+  , ("eur", EUR)
+  , ("euro", EUR)
+  , ("euros", EUR)
+  , ("eurs", EUR)
+  , ("€ur", EUR)
+  , ("€uro", EUR)
+  , ("€uros", EUR)
+  , ("€urs", EUR)
+  , ("gbp", GBP)
+  , ("gel", GEL)
+  , ("hkd", HKD)
+  , ("hrk", HRK)
+  , ("idr", IDR)
+  , ("ils", ILS)
+  , ("₪", ILS)
+  , ("nis", ILS)
+  , ("inr", INR)
+  , ("iqd", IQD)
+  , ("rs", INR)
+  , ("rs.", INR)
+  , ("rupee", INR)
+  , ("rupees", INR)
+  , ("jmd", JMD)
+  , ("jod", JOD)
+  , ("¥", JPY)
+  , ("jpy", JPY)
+  , ("lari", GEL)
+  , ("\x20BE", GEL)
+  , ("yen", JPY)
+  , ("krw", KRW)
+  , ("kwd", KWD)
+  , ("lbp", LBP)
+  , ("mad", MAD)
+  , ("mnt", MNT)
+  , ("myr", MYR)
+  , ("rm", MYR)
+  , ("₮", MNT)
+  , ("tugrik", MNT)
+  , ("tugriks", MNT)
+  , ("nok", NOK)
+  , ("nzd", NZD)
+  , ("pkr", PKR)
+  , ("pln", PLN)
+  , ("£", Pound)
+  , ("pesos", ARS)
+  , ("pt", PTS)
+  , ("pta", PTS)
+  , ("ptas", PTS)
+  , ("pts", PTS)
+  , ("qar", QAR)
+  , ("₽", RUB)
+  , ("rial", Rial)
+  , ("rials", Rial)
+  , ("riyal", Riyal)
+  , ("riyals", Riyal)
+  , ("ron", RON)
+  , ("rub", RUB)
+  , ("sar", SAR)
+  , ("sek", SEK)
+  , ("sgd", SGD)
+  , ("shekel", ILS)
+  , ("shekels", ILS)
+  , ("thb", THB)
+  , ("ttd", TTD)
+  , ("usd", USD)
+  , ("us$", USD)
+  , ("vnd", VND)
+  , ("zar", ZAR)
+  ]
+
+ruleCurrencies :: Rule
+ruleCurrencies = Rule
+  { name = "currencies"
+  , pattern =
+    [ regex "(aed|aud|bgn|brl|byn|¢|cad|chf|cny|c|\\$|dinars?|dkk|dollars?|egp|(e|€)uro?s?|€|gbp|gel|\x20BE|hrk|idr|ils|₪|inr|iqd|jmd|jod|¥|jpy|lari|krw|kwd|lbp|mad|₮|mnt|tugriks?|myr|rm|nis|nok|nzd|£|pesos|pkr|pln|pta?s?|qar|₽|rs\\.?|riy?als?|ron|rub|rupees?|sar|sek|sgb|shekels?|thb|ttd|us(d|\\$)|vnd|yen|yuan|zar)"
+    ]
+  , prod = \tokens -> case tokens of
+      (Token RegexMatch (GroupMatch (match:_)):_) -> do
+        c <- HashMap.lookup (Text.toLower match) currencies
+        Just . Token AmountOfMoney $ currencyOnly c
+      _ -> Nothing
+  }
 
 ruleUnitAmount :: Rule
 ruleUnitAmount = Rule
@@ -207,8 +316,8 @@ ruleIntervalMin = Rule
       _ -> Nothing
   }
 
-ruleCurrencies :: Rule
-ruleCurrencies = Rule
+ruleCurrencies2 :: Rule
+ruleCurrencies2 = Rule
   { name = "£, $"
   , pattern =
     [ regex "(dollari|sterline)"
@@ -253,7 +362,8 @@ ruleIntersect = Rule
 
 rules :: [Rule]
 rules =
-  [ ruleUnitAmount
+  [ ruleCurrencies
+  , ruleUnitAmount
   , ruleCent
   , ruleIntersect
   , ruleIntersectAndNumeral
@@ -265,6 +375,6 @@ rules =
   , ruleIntervalMax
   , ruleIntervalMin
   , ruleIntervalNumeralDash
-  , ruleCurrencies
+  , ruleCurrencies2
   , rulePrecision
   ]

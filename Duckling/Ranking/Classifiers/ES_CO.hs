@@ -1365,6 +1365,15 @@ classifiers
                    koData =
                      ClassData{prior = -infinity, unseen = -0.6931471805599453,
                                likelihoods = HashMap.fromList [], n = 0}}),
+       ("compose by multiplication",
+        Classifier{okData =
+                     ClassData{prior = -infinity, unseen = -0.6931471805599453,
+                               likelihoods = HashMap.fromList [], n = 0},
+                   koData =
+                     ClassData{prior = 0.0, unseen = -1.3862943611198906,
+                               likelihoods =
+                                 HashMap.fromList [("number 100..1000 number 100..1000 ", 0.0)],
+                               n = 2}}),
        ("<hour-of-day> <integer> (as relative minutes)",
         Classifier{okData =
                      ClassData{prior = -0.40546510810816444,

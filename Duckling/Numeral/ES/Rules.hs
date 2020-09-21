@@ -162,6 +162,22 @@ ruleNumeralsSuffixesKMG = Rule
       _ -> Nothing
   }
 
+rulePowersOfTen :: Rule
+rulePowersOfTen = Rule
+  { name = "powers of tens"
+  , pattern = [regex "(millon|millón|billon|billón|trillon|trillón)e?s?"]
+  , prod = \tokens -> case tokens of
+      (Token RegexMatch (GroupMatch (match : _)) : _) ->
+        case Text.toLower match of
+          "millon" -> double 1e6 >>= withGrain 6 >>= withMultipliable
+          "millón" -> double 1e6 >>= withGrain 6 >>= withMultipliable
+          "billon" -> double 1e9 >>= withGrain 9 >>= withMultipliable
+          "billón" -> double 1e9 >>= withGrain 9 >>= withMultipliable
+          _ -> Nothing
+      _ -> Nothing
+  }
+
+
 oneHundredToThousandMap :: HashMap.HashMap Text.Text Integer
 oneHundredToThousandMap =
   HashMap.fromList
@@ -188,7 +204,7 @@ ruleNumeral6 = Rule
       ]
   , prod = \tokens -> case tokens of
       (Token RegexMatch (GroupMatch (match : _)) : _) ->
-        HashMap.lookup (Text.toLower match) oneHundredToThousandMap >>= integer
+        HashMap.lookup (Text.toLower match) oneHundredToThousandMap >>= integer >>= withMultipliable
       _ -> Nothing
   }
 
@@ -245,11 +261,25 @@ ruleBelowTenWithTwoDigits = Rule
       _ -> Nothing
   }
 
+ruleMultiply :: Rule
+ruleMultiply = Rule
+  { name = "compose by multiplication"
+  , pattern =
+    [ Predicate isPositive
+    , Predicate isMultipliable
+    ]
+  , prod = \tokens -> case tokens of
+      (token1:token2:_) -> multiply token1 token2
+      _ -> Nothing
+  }
+
+
 rules :: [Rule]
 rules =
   [ ruleBelowTenWithTwoDigits
   , ruleNumeral
   , ruleNumeral2
+  , rulePowersOfTen
   , ruleNumeral3
   , ruleNumeral4
   , ruleNumeral5
@@ -258,4 +288,5 @@ rules =
   , ruleNumerals
   , ruleNumeralsPrefixWithNegativeOrMinus
   , ruleNumeralsSuffixesKMG
+  , ruleMultiply
   ]

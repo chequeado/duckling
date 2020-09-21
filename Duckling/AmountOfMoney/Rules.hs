@@ -30,6 +30,7 @@ import Duckling.Types
 import qualified Duckling.AmountOfMoney.Types as TAmountOfMoney
 import qualified Duckling.Numeral.Types as TNumeral
 
+{--
 currencies :: HashMap Text Currency
 currencies = HashMap.fromList
   [ ("aed", AED)
@@ -97,6 +98,7 @@ currencies = HashMap.fromList
   , ("pkr", PKR)
   , ("pln", PLN)
   , ("£", Pound)
+  , ("pesos", ARS)
   , ("pt", PTS)
   , ("pta", PTS)
   , ("ptas", PTS)
@@ -126,7 +128,7 @@ ruleCurrencies :: Rule
 ruleCurrencies = Rule
   { name = "currencies"
   , pattern =
-    [ regex "(aed|aud|bgn|brl|byn|¢|cad|chf|cny|c|\\$|dinars?|dkk|dollars?|egp|(e|€)uro?s?|€|gbp|gel|\x20BE|hrk|idr|ils|₪|inr|iqd|jmd|jod|¥|jpy|lari|krw|kwd|lbp|mad|₮|mnt|tugriks?|myr|rm|nis|nok|nzd|£|pkr|pln|pta?s?|qar|₽|rs\\.?|riy?als?|ron|rub|rupees?|sar|sek|sgb|shekels?|thb|ttd|us(d|\\$)|vnd|yen|yuan|zar)"
+    [ regex "(aed|aud|bgn|brl|byn|¢|cad|chf|cny|c|\\$|dinars?|dkk|dollars?|egp|(e|€)uro?s?|€|gbp|gel|\x20BE|hrk|idr|ils|₪|inr|iqd|jmd|jod|¥|jpy|lari|krw|kwd|lbp|mad|₮|mnt|tugriks?|myr|rm|nis|nok|nzd|£|pesos|pkr|pln|pta?s?|qar|₽|rs\\.?|riy?als?|ron|rub|rupees?|sar|sek|sgb|shekels?|thb|ttd|us(d|\\$)|vnd|yen|yuan|zar)"
     ]
   , prod = \tokens -> case tokens of
       (Token RegexMatch (GroupMatch (match:_)):_) -> do
@@ -134,6 +136,7 @@ ruleCurrencies = Rule
         Just . Token AmountOfMoney $ currencyOnly c
       _ -> Nothing
   }
+--}
 
 ruleAmountUnit :: Rule
 ruleAmountUnit = Rule
@@ -165,5 +168,5 @@ rules :: [Rule]
 rules =
   [ ruleAmountUnit
   , ruleAmountLatent
-  , ruleCurrencies
+--  , ruleCurrencies
   ]
