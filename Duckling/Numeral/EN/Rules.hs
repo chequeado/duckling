@@ -25,9 +25,11 @@ import qualified Data.Text as Text
 import Duckling.Dimensions.Types
 import Duckling.Numeral.Helpers
 import Duckling.Numeral.Types (NumeralData (..))
+import Duckling.Ordinal.Types (OrdinalData (..))
 import Duckling.Regex.Types
 import Duckling.Types
 import qualified Duckling.Numeral.Types as TNumeral
+import qualified Duckling.Ordinal.Types as TOrdinal
 
 ruleDozen :: Rule
 ruleDozen = Rule
@@ -123,6 +125,23 @@ ruleTens = Rule
   , prod = \tokens -> case tokens of
       (Token RegexMatch (GroupMatch (match:_)):_) ->
         HashMap.lookup (Text.toLower match) tensMap >>= integer
+      _ -> Nothing
+  }
+
+ruleFractions :: Rule
+ruleFractions = Rule
+  { name = "<numeral> <ordinal>"
+  , pattern =
+    [ dimension Numeral
+    , dimension Ordinal
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = number}:
+       Token Ordinal OrdinalData{TOrdinal.value = ordinal}:
+       _) -> do
+        n <- double number
+        d <- integer (toInteger ordinal)
+        divide n d >>= notOkForAnyTime
       _ -> Nothing
   }
 
@@ -326,6 +345,7 @@ rules :: [Rule]
 rules =
   [ ruleToNineteen
   , ruleTens
+  , ruleFractions
   , rulePowersOfTen
   , ruleCompositeTens
   , ruleSkipHundreds1

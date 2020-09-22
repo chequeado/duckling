@@ -147,7 +147,7 @@ ruleDurationA = Rule
     , dimension TimeGrain
     ]
   , prod = \case
-      (_:Token TimeGrain grain:_) -> Just . Token Duration $ duration grain 0
+      (_:Token TimeGrain grain:_) -> Just . Token Duration $ duration grain 1
       _ -> Nothing
   }
 

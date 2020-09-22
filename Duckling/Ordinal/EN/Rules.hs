@@ -29,6 +29,7 @@ import Duckling.Types
 ordinalsMap :: HashMap Text Int
 ordinalsMap = HashMap.fromList
   [ ( "first", 1 )
+  , ( "half", 2 )
   , ( "second", 2 )
   , ( "third", 3 )
   , ( "fourth", 4 )
@@ -72,7 +73,7 @@ cardinalsMap = HashMap.fromList
 ruleOrdinals :: Rule
 ruleOrdinals = Rule
   { name = "ordinals (first..twentieth,thirtieth,...)"
-  , pattern = [regex "(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|thirtieth|fortieth|fiftieth|sixtieth|seventieth|eightieth|ninetieth)"]
+  , pattern = [regex "(first|half|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|thirtieth|fortieth|fiftieth|sixtieth|seventieth|eightieth|ninetieth)s?"]
   , prod = \tokens -> case tokens of
       (Token RegexMatch (GroupMatch (match:_)):_) ->
         ordinal <$> HashMap.lookup (Text.toLower match) ordinalsMap
