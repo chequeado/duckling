@@ -145,6 +145,43 @@ ruleFractions = Rule
       _ -> Nothing
   }
 
+
+ruleFractions1 :: Rule
+ruleFractions1 = Rule
+  { name = "<numeral> percent"
+  , pattern =
+    [ dimension Numeral
+    , regex "percent"
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = number}:
+       _:
+       _) -> do
+        n <- double number
+        d <- integer 100
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
+
+ruleFractions2 :: Rule
+ruleFractions2 = Rule
+  { name = "<numeral> <ordinal>"
+  , pattern =
+    [ dimension Numeral
+    , regex "out of"
+    , dimension Numeral
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = numerator}:
+       _:
+       Token Numeral NumeralData{TNumeral.value = denominator}:
+       _) -> do
+        n <- double numerator
+        d <- double denominator
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
+
 rulePowersOfTen :: Rule
 rulePowersOfTen = Rule
   { name = "powers of tens"
@@ -346,6 +383,8 @@ rules =
   [ ruleToNineteen
   , ruleTens
   , ruleFractions
+  , ruleFractions1
+  , ruleFractions2
   , rulePowersOfTen
   , ruleCompositeTens
   , ruleSkipHundreds1

@@ -1427,7 +1427,7 @@ ruleIntervalUntilTime :: Rule
 ruleIntervalUntilTime = Rule
   { name = "until <time>"
   , pattern =
-    [ regex "(anytime |sometimes? )?(before|(un)?til(l)?|through|up to)"
+    [ regex "(anytime |sometimes? )?(before|(un)?til(l)?|through)"
     , dimension Time
     ]
   , prod = \tokens -> case tokens of
@@ -2055,7 +2055,7 @@ ruleCycleThisLastNext :: Rule
 ruleCycleThisLastNext = Rule
   { name = "this|last|next <cycle>"
   , pattern =
-    [ regex "(this|current|coming|next|(the( following)?)|last|past|previous|upcoming)"
+    [ regex "(this|current|coming|next|the following|last|past|previous|upcoming)"
     , dimension TimeGrain
     ]
   , prod = \case
@@ -2073,7 +2073,7 @@ ruleCycleThisLastNext = Rule
             "next"          -> tt $ cycleNth grain 1
             "upcoming"      -> tt $ cycleNth grain 1
             "the following" -> tt $ cycleNth grain 1
-            "the"           -> tt $ cycleNth grain 0
+--            "the"           -> tt $ cycleNth grain 0
             _ -> Nothing
       _ -> Nothing
   }
@@ -2614,9 +2614,9 @@ rules =
   , ruleNDOWFromTime
   , ruleYearLatent
   , ruleYearADBC
-  , ruleTheDOMNumeral
-  , ruleTheDOMOrdinal
-  , ruleDOMLatent
+--  , ruleTheDOMNumeral
+--  , ruleTheDOMOrdinal
+--  , ruleDOMLatent
   , ruleNamedDOMOrdinal
   , ruleMonthDOMNumeral
   , ruleDOMMonth

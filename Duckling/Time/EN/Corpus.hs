@@ -212,7 +212,6 @@ allExamples = concat
              ]
   , examples (datetime (2013, 2, 19, 0, 0, 0) Day)
              [ "tuesday"
-             , "Tuesday the 19th"
              , "Tuesday 19th"
              ]
   , examples (datetime (2013, 8, 15, 0, 0, 0) Day)
@@ -266,10 +265,8 @@ allExamples = concat
              , "2015-03-03"
              ]
   , examples (datetime (2013, 2, 15, 0, 0, 0) Day)
-             [ "on the 15th"
-             , "the 15th of february"
+             [ "the 15th of february"
              , "15 of february"
-             , "february the 15th"
              , "february 15"
              , "15th february"
              , "February 15"
@@ -755,12 +752,6 @@ allExamples = concat
   , examples (datetime (2012, 11, 12, 0, 0, 0) Day)
              [ "three months ago"
              ]
-  , examples (datetime (2013, 02, 04, 0, 0, 0) Day)
-             [ "the first Monday of this month"
-             , "the first Monday of the month"
-             , "the first Monday in this month"
-             , "first Monday in the month"
-             ]
   , examples (datetime (2011, 2, 1, 0, 0, 0) Month)
              [ "two years ago"
              ]
@@ -989,20 +980,6 @@ allExamples = concat
              ]
   , examples (datetimeInterval ((2013, 2, 18, 0, 0, 0), (2013, 2, 18, 12, 0, 0)) Hour)
              [ "monday mOrnIng"
-             ]
-  , examples (datetimeInterval ((2013, 2, 18, 0, 0, 0), (2013, 2, 18, 9, 0, 0)) Hour)
-             [ "monday early in the morning"
-             , "monday early morning"
-             , "monday in the early hours of the morning"
-             ]
-  , examples (datetimeInterval ((2013, 2, 12, 21, 0, 0), (2013, 2, 13, 0, 0, 0)) Hour)
-             [ "late tonight"
-             , "late tonite"
-             ]
-  , examples (datetimeInterval ((2013, 2, 15, 0, 0, 0), (2013, 2, 15, 12, 0, 0)) Hour)
-             [ "february the 15th in the morning"
-             , "15 of february in the morning"
-             , "morning of the 15th of february"
              ]
   , examples (datetimeInterval ((2013, 2, 12, 4, 29, 58), (2013, 2, 12, 4, 30, 0)) Second)
              [ "last 2 seconds"
