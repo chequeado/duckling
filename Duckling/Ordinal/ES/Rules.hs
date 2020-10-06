@@ -28,6 +28,10 @@ ordinalsMap = HashMap.fromList
   , ( "primeros" , 1 )
   , ( "primera" , 1 )
   , ( "primeras" , 1 )
+  , ( "medio" , 2 )
+  , ( "medios" , 2 )
+  , ( "mitad" , 2 )
+  , ( "mitades" , 2 )
   , ( "segundo" , 2 )
   , ( "segunda" , 2 )
   , ( "segundas" , 2 )
@@ -37,6 +41,8 @@ ordinalsMap = HashMap.fromList
   , ( "terceras" , 3 )
   , ( "tercero" , 3 )
   , ( "tercer" , 3 )
+  , ( "tercio" , 3 )
+  , ( "tercios" , 3 )
   , ( "cuarta" , 4 )
   , ( "cuartas" , 4 )
   , ( "cuartos" , 4 )
@@ -79,13 +85,14 @@ ruleOrdinalsPrimero :: Rule
 ruleOrdinalsPrimero = Rule
   { name = "ordinals (primero..10)"
   , pattern =
-    [ regex "((primer|segund|cuart|quint|sext|s[eé]ptim|octav|noven|d[eé]cim)(os?|as?)|(prim|terc)er)"
+    [ regex "((primer|medi|terci|segund|cuart|quint|sext|s[eé]ptim|octav|noven|d[eé]cim)(os?|as?)|(prim|terc)er|(mitad)es?)"
     ]
   , prod = \tokens -> case tokens of
       (Token RegexMatch (GroupMatch (match:_)):_) ->
         ordinal <$> HashMap.lookup (Text.toLower match) ordinalsMap
       _ -> Nothing
   }
+
 
 rules :: [Rule]
 rules =

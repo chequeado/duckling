@@ -20,7 +20,9 @@ import Prelude
 import Duckling.Dimensions.Types
 import Duckling.Numeral.Helpers
 import Duckling.Numeral.Types (NumeralData(..))
+import Duckling.Ordinal.Types (OrdinalData (..))
 import qualified Duckling.Numeral.Types as TNumeral
+import qualified Duckling.Ordinal.Types as TOrdinal
 import Duckling.Regex.Types
 import Duckling.Types
 
@@ -177,6 +179,78 @@ rulePowersOfTen = Rule
       _ -> Nothing
   }
 
+ruleFractions :: Rule
+ruleFractions = Rule
+  { name = "<numeral> <ordinal>"
+  , pattern =
+    [ dimension Numeral
+    , dimension Ordinal
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = number}:
+       Token Ordinal OrdinalData{TOrdinal.value = ordinal}:
+       _) -> do
+        n <- double number
+        d <- integer (toInteger ordinal)
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
+
+ruleFractions1 :: Rule
+ruleFractions1 = Rule
+  { name = "<numeral> por ciento"
+  , pattern =
+    [ dimension Numeral
+    , regex "por ciento"
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = number}:
+       _:
+       _) -> do
+        n <- double number
+        d <- integer 100
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
+
+ruleFractions2 :: Rule
+ruleFractions2 = Rule
+  { name = "<numeral> de cada <numeral>"
+  , pattern =
+    [ dimension Numeral
+    , regex "de( cada)?"
+    , dimension Numeral
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = numerator}:
+       _:
+       Token Numeral NumeralData{TNumeral.value = denominator}:
+       _) -> do
+        n <- double numerator
+        d <- double denominator
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
+
+
+ruleFractions3 :: Rule
+ruleFractions3 = Rule
+  { name = "<numeral> por <numeral>"
+  , pattern =
+    [ dimension Numeral
+    , regex "por"
+    , dimension Numeral
+    ]
+  , prod = \tokens -> case tokens of
+      (Token Numeral NumeralData{TNumeral.value = numerator}:
+       _:
+       Token Numeral NumeralData{TNumeral.value = denominator}:
+       _) -> do
+        n <- double numerator
+        d <- double denominator
+        divide n d >>= notOkForAnyTime
+      _ -> Nothing
+  }
 
 oneHundredToThousandMap :: HashMap.HashMap Text.Text Integer
 oneHundredToThousandMap =
@@ -284,6 +358,10 @@ rules =
   , ruleNumeral4
   , ruleNumeral5
   , ruleNumeral6
+  , ruleFractions
+  , ruleFractions1
+  , ruleFractions2
+  , ruleFractions3
   , ruleNumeralDotNumeral
   , ruleNumerals
   , ruleNumeralsPrefixWithNegativeOrMinus

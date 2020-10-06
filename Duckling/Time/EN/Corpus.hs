@@ -117,11 +117,7 @@ latentCorpus :: Corpus
 latentCorpus = (testContext, testOptions {withLatent = True}, xs)
   where
     xs = concat
-      [ examples (datetime (2013, 2, 24, 0, 0, 0) Day)
-                 [ "the 24"
-                 , "On 24th"
-                 ]
-      , examples (datetime (2013, 2, 12, 7, 0, 0) Hour)
+      [ examples (datetime (2013, 2, 12, 7, 0, 0) Hour)
                  [ "7"
                  , "7a"
                  ]
@@ -1308,10 +1304,6 @@ allExamples = concat
              ]
   , examples (datetimeInterval ((2013, 2, 13, 13, 0, 0), (2013, 2, 13, 15, 0, 0)) Hour)
              [ "1pm-2pm tomorrow"
-             ]
-  , examples (datetime (2013, 3, 1, 0, 0, 0) Day)
-             [ "on the first"
-             , "the 1st"
              ]
   , examples (datetime (2013, 2, 12, 10, 30, 0) Minute)
              [ "at 1030"

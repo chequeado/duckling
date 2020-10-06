@@ -647,8 +647,8 @@ classifiers
                      ClassData{prior = -infinity, unseen = -0.6931471805599453,
                                likelihoods = HashMap.fromList [], n = 0},
                    koData =
-                     ClassData{prior = 0.0, unseen = -2.639057329615259,
-                               likelihoods = HashMap.fromList [("", 0.0)], n = 12}}),
+                     ClassData{prior = 0.0, unseen = -2.772588722239781,
+                               likelihoods = HashMap.fromList [("", 0.0)], n = 14}}),
        ("invierno",
         Classifier{okData =
                      ClassData{prior = 0.0, unseen = -1.0986122886681098,
@@ -853,6 +853,18 @@ classifiers
                    koData =
                      ClassData{prior = -infinity, unseen = -2.1972245773362196,
                                likelihoods = HashMap.fromList [], n = 0}}),
+       ("<numeral> <ordinal>",
+        Classifier{okData =
+                     ClassData{prior = -infinity, unseen = -1.0986122886681098,
+                               likelihoods = HashMap.fromList [], n = 0},
+                   koData =
+                     ClassData{prior = 0.0, unseen = -1.791759469228055,
+                               likelihoods =
+                                 HashMap.fromList
+                                   [("number (0..15)ordinals (primero..10)", -0.916290731874155),
+                                    ("integer (numeric)ordinals (primero..10)",
+                                     -0.5108256237659907)],
+                               n = 3}}),
        ("n <cycle> (proximo|que viene)",
         Classifier{okData =
                      ClassData{prior = 0.0, unseen = -2.5649493574615367,
