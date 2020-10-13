@@ -26,7 +26,9 @@ grains = [ ("segundo (grain)", "seg(undo)?s?", TG.Second)
          , ("dia (grain)", "d(í|i)as?", TG.Day)
          , ("semana (grain)", "semanas?", TG.Week)
          , ("mes (grain)", "mes(es)?", TG.Month)
-         , ("trimestre (grain)", "trimestres?", TG.Quarter)
+         , ("trimestre (grain)", "trimestres?", TG.Trimester)
+         , ("bimestre (grain)", "bimestres?", TG.Bimester)
+         , ("semestre (grain)", "semestres?", TG.Semester)
          , ("año (grain)", "a(n|ñ)os?", TG.Year)
          ]
 

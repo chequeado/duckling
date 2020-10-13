@@ -18,14 +18,16 @@ import Prelude
 import qualified Data.Text as Text
 
 import Duckling.Dimensions.Types
-import Duckling.Duration.Helpers (isGrain)
+import Duckling.Duration.Helpers (duration, isGrain, isMester)
+import Duckling.Duration.Types (DurationData (..))
 import Duckling.Numeral.Helpers (parseInt)
 import Duckling.Ordinal.Types (OrdinalData(..))
 import Duckling.Regex.Types
 import Duckling.Time.Helpers
-import Duckling.Time.Types (TimeData(..))
+import Duckling.Time.Types (TimeData (..), TimeIntervalType (..))
 import Duckling.Types
 import qualified Duckling.Ordinal.Types as TOrdinal
+import qualified Duckling.Duration.Types as TDuration
 import qualified Duckling.Time.Types as TTime
 import qualified Duckling.TimeGrain.Types as TG
 
@@ -53,7 +55,7 @@ ruleHaceDuration = Rule
 
 ruleCeTime :: Rule
 ruleCeTime = Rule
-  { name = "ce <time>"
+  { name = "este <time>"
   , pattern =
     [ regex "este"
     , dimension Time
@@ -179,7 +181,7 @@ ruleUltimoDayofweekDeTime = Rule
 
 ruleEntreDatetimeEtDatetimeInterval :: Rule
 ruleEntreDatetimeEtDatetimeInterval = Rule
-  { name = "entre <datetime> et <datetime> (interval)"
+  { name = "entre <datetime> y <datetime> (interval)"
   , pattern =
     [ regex "entre"
     , dimension Time
@@ -189,6 +191,32 @@ ruleEntreDatetimeEtDatetimeInterval = Rule
   , prod = \tokens -> case tokens of
       (_:Token Time td1:_:Token Time td2:_) ->
         Token Time <$> interval TTime.Open td1 td2
+      _ -> Nothing
+  }
+
+ruleDesdeDatetime :: Rule
+ruleDesdeDatetime = Rule
+  { name = "desde <datetime>(interval)"
+  , pattern =
+    [ regex "desde( +el)?"
+    , dimension Time
+    ]
+  , prod = \tokens -> case tokens of
+      (_:Token Time td:_) ->
+        tt . withDirection TTime.After $ notLatent td
+      _ -> Nothing
+  }
+
+ruleHastaDatetime :: Rule
+ruleHastaDatetime = Rule
+  { name = "hasta <datetime>(interval)"
+  , pattern =
+    [ regex "hasta( +el)?"
+    , dimension Time
+    ]
+  , prod = \tokens -> case tokens of
+      (_:Token Time td:_) ->
+        tt . withDirection TTime.Before $ notLatent td
       _ -> Nothing
   }
 
@@ -225,7 +253,7 @@ ruleNPasadosCycle = Rule
   { name = "n pasados <cycle>"
   , pattern =
     [ Predicate $ isIntegerBetween 2 9999
-    , regex "pasad(a|o)s?"
+    , regex "pasad(a|o)s?|(u|ú)ltim[ao]s?"
     , dimension TimeGrain
     ]
   , prod = \tokens -> case tokens of
@@ -253,7 +281,7 @@ rulePasadosNCycle :: Rule
 rulePasadosNCycle = Rule
   { name = "pasados n <cycle>"
   , pattern =
-    [ regex "pasad(a|o)s?"
+    [ regex "pasad(a|o)s?|(u|ú)ltim[ao]s?|est[ao]s"
     , Predicate $ isIntegerBetween 2 9999
     , dimension TimeGrain
     ]
@@ -850,18 +878,18 @@ ruleWeekend = Rule
   , prod = \_ -> tt weekend
   }
 
-ruleOrdinalQuarterYear :: Rule
-ruleOrdinalQuarterYear = Rule
+ruleOrdinalMesterYear :: Rule
+ruleOrdinalMesterYear = Rule
   { name = "<ordinal> quarter <year>"
   , pattern =
     [ dimension Ordinal
-    , Predicate $ isGrain TG.Quarter
+    , Predicate $ isMester 
     , regex "del? ?"
     , dimension Time
     ]
   , prod = \tokens -> case tokens of
-      (Token Ordinal OrdinalData{TOrdinal.value = v}:_:Token Time td:_) ->
-        tt $ cycleNthAfter False TG.Quarter (v - 1) td
+      (Token Ordinal OrdinalData{TOrdinal.value = v}:Token TimeGrain grain:Token Time td:_) ->
+        tt $ cycleNthAfter False grain (v - 1) td
       _ -> Nothing
   }
 
@@ -977,7 +1005,7 @@ ruleLaCyclePasado = Rule
   , pattern =
     [ regex "(el|los|la|las) ?"
     , dimension TimeGrain
-    , regex "pasad(a|o)s?|(u|ú)ltim[ao]s?"
+    , regex "pasad(a|o)s?|(u|ú)ltim[ao]s?|anterior(es)?"
     ]
   , prod = \tokens -> case tokens of
       (_:Token TimeGrain grain:_) ->
@@ -1110,6 +1138,34 @@ ruleYear = Rule
       _ -> Nothing
   }
 
+ruleDecade :: Rule
+ruleDecade = Rule
+  { name = "year"
+  , pattern =
+    [ regex "d[ée]cada del|los",
+      Predicate $ isIntegerBetween 10 100
+    ]
+  , prod = \tokens -> case tokens of
+      (_:token:_) -> do
+        v <- getIntValue token
+        Token Time <$> interval TTime.Open (year v) (year (v + 10))
+      _ -> Nothing
+  }
+
+ruleYearChunked :: Rule
+ruleYearChunked = Rule
+  { name = "el '83"
+  , pattern =
+    [ regex "el '",
+      Predicate $ isIntegerBetween 10 100
+    ]
+  , prod = \tokens -> case tokens of
+      (_:token:_) -> do
+        v <- getIntValue token
+        tt $ year v
+      _ -> Nothing
+  }
+
 ruleEsteenUnCycle :: Rule
 ruleEsteenUnCycle = Rule
   { name = "este|en un <cycle>"
@@ -1180,16 +1236,16 @@ ruleDdmmyyyy = Rule
       _ -> Nothing
   }
 
-ruleOrdinalQuarter :: Rule
-ruleOrdinalQuarter = Rule
+ruleOrdinalMester :: Rule
+ruleOrdinalMester = Rule
   { name = "<ordinal> quarter"
   , pattern =
     [ dimension Ordinal
-    , Predicate $ isGrain TG.Quarter
+    , Predicate $ isMester
     ]
   , prod = \tokens -> case tokens of
-      (Token Ordinal OrdinalData{TOrdinal.value = v}:_) ->
-        tt . cycleNthAfter False TG.Quarter (v - 1)
+      (Token Ordinal OrdinalData{TOrdinal.value = v}:Token TimeGrain grain:_) ->
+        tt . cycleNthAfter False grain (v - 1)
           $ cycleNth TG.Year 0
       _ -> Nothing
   }
@@ -1567,8 +1623,11 @@ rules =
   , ruleDdmm
   , ruleDdmmyyyy
   , ruleDeDatetimeDatetimeInterval
+  , ruleDesdeDatetime
+  , ruleHastaDatetime
   , ruleDelMedioda
   , ruleDelYear
+  , ruleDecade
   , ruleDentroDeDuration
   , ruleDimTimeDeLaManana
   , ruleDimTimeDeLaTarde
@@ -1610,8 +1669,8 @@ rules =
   , ruleNow
   , ruleNthTimeDeTime
   , ruleNthTimeDeTime2
-  , ruleOrdinalQuarter
-  , ruleOrdinalQuarterYear
+  , ruleOrdinalMester
+  , ruleOrdinalMesterYear
   , rulePasadosNCycle
   , ruleProximasNCycle
   , ruleRightNow
@@ -1628,6 +1687,7 @@ rules =
   , ruleUltimoDayofweekDeTime
   , ruleWeekend
   , ruleYear
+  , ruleYearChunked
   , ruleYearLatent
   , ruleYesterday
   , ruleYyyymmdd

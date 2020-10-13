@@ -235,7 +235,8 @@ allExamples = concat
              , "siguiente semana"
              ]
   , examples (datetime (2013, 1, 1, 0, 0, 0) Month)
-             [ "el pasado mes"
+             [ "el pasado mes",
+                "el mes pasado"
              ]
   , examples (datetime (2013, 3, 0, 0, 0, 0) Month)
              [ "el mes que viene"
@@ -462,7 +463,9 @@ allExamples = concat
              ]
   , examples (datetimeInterval ((2011, 0, 0, 0, 0, 0), (2013, 0, 0, 0, 0, 0)) Year)
              [ "pasados 2 anos"
+             , "últimos 2 años"
              , "dos pasados años"
+             , "dos últimos años"
              ]
   , examples (datetimeInterval ((2014, 0, 0, 0, 0, 0), (2017, 0, 0, 0, 0, 0)) Year)
              [ "3 próximos años"

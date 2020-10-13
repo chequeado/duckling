@@ -10,6 +10,7 @@
 module Duckling.Duration.Helpers
   ( duration
   , isGrain
+  , isMester
   , isNatural
   , minutesFromHourMixedFraction
   , nPlusOneHalf
@@ -32,6 +33,9 @@ isGrain :: TG.Grain -> Predicate
 isGrain value (Token TimeGrain grain) = grain == value
 isGrain _ _ = False
 
+isMester :: Predicate
+isMester (Token TimeGrain value) = elem value [TG.Bimester, TG.Trimester, TG.Semester] 
+isMester _ = False
 -- -----------------------------------------------------------------
 -- Production
 
